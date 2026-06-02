@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Email Router | AI-Powered Analysis</title>
+    <title>Email Intelligence | Testing Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,16 +19,16 @@
             --ring: rgba(79, 70, 229, 0.1);
             
             /* Intent Colors */
-            --refund: #eff6ff; --refund-text: #1d4ed8;
-            --tech: #f5f3ff; --tech-text: #6d28d9;
-            --sales: #ecfdf5; --sales-text: #047857;
-            --other: #f1f5f9; --other-text: #475569;
+            --intent-refund: #eff6ff; --intent-refund-text: #1d4ed8;
+            --intent-tech-support: #f5f3ff; --intent-tech-support-text: #6d28d9;
+            --intent-sales: #ecfdf5; --intent-sales-text: #047857;
+            --intent-other: #f1f5f9; --intent-other-text: #475569;
             
             /* Urgency Colors */
-            --critical: #fef2f2; --critical-text: #b91c1c;
-            --high: #fff7ed; --high-text: #c2410c;
-            --medium: #eff6ff; --medium-text: #1d4ed8;
-            --low: #f0fdf4; --low-text: #15803d;
+            --urgency-critical: #fef2f2; --urgency-critical-text: #b91c1c;
+            --urgency-high: #fff7ed; --urgency-high-text: #c2410c;
+            --urgency-medium: #eff6ff; --urgency-medium-text: #1d4ed8;
+            --urgency-low: #f0fdf4; --urgency-low-text: #15803d;
         }
 
         * { box-sizing: border-box; }
@@ -44,9 +44,19 @@
             padding: 2rem 1rem;
         }
 
-        .app-container { width: 100%; max-width: 800px; }
+        .app-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1100px;
+        }
 
-        header { text-align: center; margin-bottom: 3rem; }
+        @media (max-width: 900px) {
+            .app-layout { grid-template-columns: 1fr; }
+        }
+
+        header { text-align: center; margin-bottom: 2rem; grid-column: 1 / -1; }
         header h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.025em; color: var(--text-main); }
         header p { color: var(--text-muted); font-size: 1.125rem; }
 
@@ -57,6 +67,29 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             padding: 2rem;
             margin-bottom: 2rem;
+        }
+
+        .presets {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .preset-btn {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+        .preset-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--ring);
         }
 
         .form-group { margin-bottom: 1.5rem; }
@@ -74,6 +107,11 @@
         input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--ring); }
         textarea { height: 180px; resize: vertical; }
 
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+
         .btn { 
             background: var(--primary); 
             color: white; 
@@ -83,7 +121,7 @@
             font-weight: 600; 
             font-size: 1rem;
             cursor: pointer; 
-            width: 100%; 
+            flex: 2;
             transition: background 0.2s;
             display: flex;
             align-items: center;
@@ -92,6 +130,14 @@
         }
         .btn:hover { background: var(--primary-hover); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            flex: 1;
+        }
+        .btn-secondary:hover { background: #f1f5f9; }
 
         #resultArea { display: none; animation: slideUp 0.4s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -103,15 +149,15 @@
         .badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.025em; }
         
         /* Dynamic Badge Classes */
-        .intent-refund { background: var(--refund); color: var(--refund-text); }
-        .intent-tech { background: var(--tech); color: var(--tech-text); }
-        .intent-sales { background: var(--sales); color: var(--sales-text); }
-        .intent-other { background: var(--other); color: var(--other-text); }
+        .intent-REFUND { background: var(--intent-refund); color: var(--intent-refund-text); }
+        .intent-TECH_SUPPORT { background: var(--intent-tech-support); color: var(--intent-tech-support-text); }
+        .intent-SALES { background: var(--intent-sales); color: var(--intent-sales-text); }
+        .intent-OTHER { background: var(--intent-other); color: var(--intent-other-text); }
         
-        .urgency-critical { background: var(--critical); color: var(--critical-text); }
-        .urgency-high { background: var(--high); color: var(--high-text); }
-        .urgency-medium { background: var(--medium); color: var(--medium-text); }
-        .urgency-low { background: var(--low); color: var(--low-text); }
+        .urgency-CRITICAL { background: var(--urgency-critical); color: var(--urgency-critical-text); }
+        .urgency-HIGH { background: var(--urgency-high); color: var(--urgency-high-text); }
+        .urgency-MEDIUM { background: var(--urgency-medium); color: var(--urgency-medium-text); }
+        .urgency-LOW { background: var(--urgency-low); color: var(--urgency-low-text); }
 
         .section { margin-bottom: 1.5rem; }
         .section-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: block; }
@@ -122,6 +168,23 @@
 
         .action-box { background: #f8fafc; border-left: 4px solid var(--primary); padding: 1rem; border-radius: 4px; margin-top: 1rem; }
         .action-text { color: var(--primary); font-weight: 600; font-size: 1rem; }
+
+        /* History Sidebar */
+        .sidebar { height: fit-content; }
+        .history-title { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .history-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .history-item { 
+            padding: 0.75rem; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            background: white; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .history-item:hover { border-color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .history-subject { font-weight: 600; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .history-meta { display: flex; gap: 0.5rem; font-size: 0.75rem; color: var(--text-muted); }
 
         .raw-data { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; }
         .raw-data summary { cursor: pointer; color: var(--text-muted); font-size: 0.875rem; font-weight: 500; outline: none; display: flex; align-items: center; gap: 0.4rem; }
@@ -137,14 +200,22 @@
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <div class="app-layout">
         <header>
             <h1>Email Intelligence</h1>
-            <p>Automated Classification & Entity Extraction</p>
+            <p>Testing Dashboard for Automated Routing</p>
         </header>
 
         <main>
             <section class="card">
+                <label>Test Scenarios</label>
+                <div class="presets">
+                    <button class="preset-btn" onclick="applyPreset('refund')">Refund Request</button>
+                    <button class="preset-btn" onclick="applyPreset('tech')">Login Issue</button>
+                    <button class="preset-btn" onclick="applyPreset('sales')">Enterprise Inquiry</button>
+                    <button class="preset-btn" onclick="applyPreset('urgent')">Urgent Complaint</button>
+                </div>
+
                 <div class="form-group">
                     <label for="subject">Email Subject</label>
                     <input type="text" id="subject" placeholder="Enter email subject line...">
@@ -153,9 +224,12 @@
                     <label for="body">Email Content</label>
                     <textarea id="body" placeholder="Paste the full email body here for analysis..."></textarea>
                 </div>
-                <button id="processBtn" class="btn" onclick="processEmail()">
-                    <span>Analyze with Gemini</span>
-                </button>
+                <div class="btn-group">
+                    <button id="processBtn" class="btn" onclick="processEmail()">
+                        <span>Analyze with Gemini</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                </div>
             </section>
 
             <div id="loader" class="loader">
@@ -201,9 +275,139 @@
                 </div>
             </article>
         </main>
+
+        <aside class="sidebar">
+            <div class="card">
+                <div class="history-title">
+                    <span>Recent Tests</span>
+                    <button class="copy-btn" style="margin: 0;" onclick="clearHistory()">Reset</button>
+                </div>
+                <div id="historyList" class="history-list">
+                    <!-- History items injected here -->
+                    <p id="noHistory" style="color: var(--text-muted); font-size: 0.875rem; text-align: center;">No recent tests found.</p>
+                </div>
+            </div>
+        </aside>
     </div>
 
     <script>
+        const PRESETS = {
+            refund: {
+                subject: "Refund Request: Order #12345",
+                body: "Hello, I received my package today but the item was damaged during shipping. I would like a full refund. My order number is #12345. Thank you."
+            },
+            tech: {
+                subject: "Problem logging in to my account",
+                body: "Hi Support Team, I've been trying to log in for the last hour but I keep getting a 'Database Connection Error'. My username is john_doe_99. Can you help?"
+            },
+            sales: {
+                subject: "Inquiry about bulk pricing for enterprise",
+                body: "Dear Sales, our company is looking to purchase 500 licenses of your software. Do you offer bulk discounts for enterprise clients? We'd like to set up a call this week."
+            },
+            urgent: {
+                subject: "URGENT: CRITICAL SYSTEM DOWN",
+                body: "I am unable to access the main dashboard. This is blocking our entire team. We need this fixed immediately. My employee ID is 9876."
+            }
+        };
+
+        let history = JSON.parse(localStorage.getItem('email_router_history') || '[]');
+
+        function applyPreset(key) {
+            document.getElementById('subject').value = PRESETS[key].subject;
+            document.getElementById('body').value = PRESETS[key].body;
+        }
+
+        function clearForm() {
+            document.getElementById('subject').value = '';
+            document.getElementById('body').value = '';
+            document.getElementById('resultArea').style.display = 'none';
+        }
+
+        function updateHistoryUI() {
+            const list = document.getElementById('historyList');
+            const emptyMsg = document.getElementById('noHistory');
+            
+            if (history.length === 0) {
+                emptyMsg.style.display = 'block';
+                list.querySelectorAll('.history-item').forEach(i => i.remove());
+                return;
+            }
+
+            emptyMsg.style.display = 'none';
+            list.querySelectorAll('.history-item').forEach(i => i.remove());
+
+            history.slice().reverse().forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.onclick = () => loadResult(history.length - 1 - index);
+                div.innerHTML = `
+                    <div class="history-subject">${item.subject}</div>
+                    <div class="history-meta">
+                        <span>${item.result.intent}</span>
+                        <span>•</span>
+                        <span>${item.result.urgency}</span>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function loadResult(index) {
+            const item = history[index];
+            document.getElementById('subject').value = item.subject;
+            document.getElementById('body').value = item.body;
+            displayResult(item.result);
+        }
+
+        function saveToHistory(subject, body, result) {
+            history.push({ subject, body, result, timestamp: new Date().toISOString() });
+            if (history.length > 10) history.shift();
+            localStorage.setItem('email_router_history', JSON.stringify(history));
+            updateHistoryUI();
+        }
+
+        function clearHistory() {
+            history = [];
+            localStorage.removeItem('email_router_history');
+            updateHistoryUI();
+        }
+
+        function displayResult(data) {
+            const resultArea = document.getElementById('resultArea');
+            
+            // Render Badges
+            const intentClass = `intent-${data.intent}`;
+            const urgencyClass = `urgency-${data.urgency}`;
+            
+            document.getElementById('badgeGroup').innerHTML = `
+                <span class="badge ${intentClass}">Intent: ${data.intent}</span>
+                <span class="badge ${urgencyClass}">Urgency: ${data.urgency}</span>
+            `;
+
+            // Render Content
+            document.getElementById('summaryText').innerText = data.summary;
+            
+            // Render Entities
+            const entityContainer = document.getElementById('entityList');
+            entityContainer.innerHTML = '';
+            if (data.entities && data.entities.length > 0) {
+                data.entities.forEach(entity => {
+                    const span = document.createElement('span');
+                    span.className = 'entity-tag';
+                    span.innerText = entity;
+                    entityContainer.appendChild(span);
+                });
+            } else {
+                entityContainer.innerHTML = '<span class="entity-tag">No entities detected</span>';
+            }
+
+            document.getElementById('actionText').innerText = data.suggested_action;
+            document.getElementById('rawJson').innerText = JSON.stringify(data, null, 2);
+            
+            resultArea.style.display = 'block';
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+        }
+
         async function processEmail() {
             const subject = document.getElementById('subject').value.trim();
             const body = document.getElementById('body').value.trim();
@@ -216,7 +420,6 @@
                 return;
             }
 
-            // State: Loading
             btn.disabled = true;
             loader.style.display = 'block';
             resultArea.style.display = 'none';
@@ -231,38 +434,9 @@
                 if (!response.ok) throw new Error('Analysis failed');
 
                 const data = await response.json();
-
-                // Render Badges
-                const intentClass = `intent-${data.intent.toLowerCase().replace('_', '')}`;
-                const urgencyClass = `urgency-${data.urgency.toLowerCase()}`;
                 
-                document.getElementById('badgeGroup').innerHTML = `
-                    <span class="badge ${intentClass}">Intent: ${data.intent}</span>
-                    <span class="badge ${urgencyClass}">Urgency: ${data.urgency}</span>
-                `;
-
-                // Render Content
-                document.getElementById('summaryText').innerText = data.summary;
-                
-                // Render Entities
-                const entityContainer = document.getElementById('entityList');
-                entityContainer.innerHTML = '';
-                if (data.entities.length > 0) {
-                    data.entities.forEach(entity => {
-                        const span = document.createElement('span');
-                        span.className = 'entity-tag';
-                        span.innerText = entity;
-                        entityContainer.appendChild(span);
-                    });
-                } else {
-                    entityContainer.innerHTML = '<span class="entity-tag">No entities detected</span>';
-                }
-
-                document.getElementById('actionText').innerText = data.suggested_action;
-                document.getElementById('rawJson').innerText = JSON.stringify(data, null, 2);
-                
-                // Show Results
-                resultArea.style.display = 'block';
+                displayResult(data);
+                saveToHistory(subject, body, data);
             } catch (error) {
                 alert("Error: " + error.message);
             } finally {
@@ -280,6 +454,9 @@
                 setTimeout(() => copyBtn.innerText = originalText, 2000);
             });
         }
+
+        // Init
+        updateHistoryUI();
     </script>
 </body>
 </html>
