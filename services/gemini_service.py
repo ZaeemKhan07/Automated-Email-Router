@@ -6,14 +6,16 @@ from models import EmailPayload, EmailAnalysis
 # Load environment variables
 load_dotenv()
 
-# Initialize the Gemini client
-# API Key should be in .env as GEMINI_API_KEY
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-
 def analyze_email(payload: EmailPayload) -> EmailAnalysis:
     """
     Uses Gemini 2.5 Flash-Lite to analyze email content and return structured data.
     """
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY is not set in environment variables.")
+    
+    client = genai.Client(api_key=api_key)
+    
     prompt = f"""
     Analyze the following email and extract structured information according to the schema.
     
