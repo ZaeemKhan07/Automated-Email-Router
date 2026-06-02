@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Router - AI Test Lab</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --bg: #f9fafb;
+            --card: #ffffff;
+            --text: #111827;
+        }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; background: var(--card); padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: var(--primary); font-size: 1.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem; }
+        input, textarea { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        textarea { height: 150px; resize: vertical; }
+        button { background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #result { margin-top: 2rem; padding: 1.5rem; border-radius: 8px; background: #f3f4f6; display: none; }
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .intent-tag { background: #e0e7ff; color: #4338ca; }
+        .urgency-tag { background: #fee2e2; color: #b91c1c; }
+        pre { background: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.875rem; }
+        .loading { text-align: center; display: none; margin: 1rem 0; font-style: italic; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Automated Email Router - AI Test Lab</h1>
+        <div class="form-group">
+            <label for="subject">Email Subject</label>
+            <input type="text" id="subject" placeholder="e.g., Refund request for order #12345">
+        </div>
+        <div class="form-group">
+            <label for="body">Email Body</label>
+            <textarea id="body" placeholder="Paste the raw email content here..."></textarea>
+        </div>
+        <button id="processBtn" onclick="processEmail()">Process Email with Gemini</button>
+        
+        <div id="loading" class="loading">Gemini is analyzing the email...</div>
+
+        <div id="result">
+            <div id="tags"></div>
+            <h3 style="margin-top:0">Analysis Summary</h3>
+            <p id="summaryText"></p>
+            <strong>Entities Extracted:</strong>
+            <p id="entitiesList"></p>
+            <strong>Suggested Action:</strong>
+            <p id="actionText" style="color: var(--primary); font-weight: bold;"></p>
+            <details>
+                <summary style="cursor:pointer; color: #6b7280; font-size: 0.75rem;">View Raw JSON</summary>
+                <pre id="rawJson"></pre>
+            </details>
+        </div>
+    </div>
+
+    <script>
+        async function processEmail() {
+            const subject = document.getElementById('subject').value;
+            const body = document.getElementById('body').value;
+            const btn = document.getElementById('processBtn');
+            const loader = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+
+            if (!subject || !body) {
+                alert("Please provide both a subject and a body.");
+                return;
+            }
+
+            // UI State: Loading
+            btn.disabled = true;
+            loader.style.display = 'block';
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/process-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subject, body })
+                });
+
+                if (!response.ok) throw new Error('Failed to process email');
+
+                const data = await response.json();
+
+                // UI State: Success
+                document.getElementById('tags').innerHTML = `
+                    <span class="tag intent-tag">Intent: ${data.intent}</span>
+                    <span class="tag urgency-tag">Urgency: ${data.urgency}</span>
+                `;
+                document.getElementById('summaryText').innerText = data.summary;
+                document.getElementById('entitiesList').innerText = data.entities.join(', ') || 'None';
+                document.getElementById('actionText').innerText = data.suggested_action;
+                document.getElementById('rawJson').innerText = JSON.stringify(data, null, 2);
+                
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                alert("Error: " + error.message);
+            } finally {
+                btn.disabled = false;
+                loader.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
