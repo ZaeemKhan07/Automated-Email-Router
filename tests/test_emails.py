@@ -8,10 +8,11 @@ from unittest.mock import patch
 client = TestClient(app)
 
 def test_root_endpoint():
-    """Test the root endpoint to ensure the API is running."""
+    """Test the root endpoint to ensure it serves the index.html interface."""
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["status"] == "online"
+    assert "text/html" in response.headers["content-type"]
+    assert "<title>" in response.text
 
 @patch("main.analyze_email")
 def test_process_email_refund(mock_analyze):

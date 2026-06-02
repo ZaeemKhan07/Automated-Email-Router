@@ -3,78 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Router - AI Test Lab</title>
+    <title>Professional Email Router | AI-Powered Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4f46e5;
-            --bg: #f9fafb;
-            --card: #ffffff;
-            --text: #111827;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --ring: rgba(79, 70, 229, 0.1);
+            
+            /* Intent Colors */
+            --refund: #eff6ff; --refund-text: #1d4ed8;
+            --tech: #f5f3ff; --tech-text: #6d28d9;
+            --sales: #ecfdf5; --sales-text: #047857;
+            --other: #f1f5f9; --other-text: #475569;
+            
+            /* Urgency Colors */
+            --critical: #fef2f2; --critical-text: #b91c1c;
+            --high: #fff7ed; --high-text: #c2410c;
+            --medium: #eff6ff; --medium-text: #1d4ed8;
+            --low: #f0fdf4; --low-text: #15803d;
         }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 800px; background: var(--card); padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        h1 { margin-top: 0; color: var(--primary); font-size: 1.5rem; }
+
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            line-height: 1.5; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .app-container { width: 100%; max-width: 800px; }
+
+        header { text-align: center; margin-bottom: 3rem; }
+        header h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.025em; color: var(--text-main); }
+        header p { color: var(--text-muted); font-size: 1.125rem; }
+
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
         .form-group { margin-bottom: 1.5rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem; }
-        input, textarea { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
-        textarea { height: 150px; resize: vertical; }
-        button { background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.2s; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        #result { margin-top: 2rem; padding: 1.5rem; border-radius: 8px; background: #f3f4f6; display: none; }
-        .tag { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; }
-        .intent-tag { background: #e0e7ff; color: #4338ca; }
-        .urgency-tag { background: #fee2e2; color: #b91c1c; }
-        pre { background: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.875rem; }
-        .loading { text-align: center; display: none; margin: 1rem 0; font-style: italic; color: #6b7280; }
+        label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main); }
+        input, textarea { 
+            width: 100%; 
+            padding: 0.75rem 1rem; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            font-family: inherit;
+            transition: all 0.2s;
+            outline: none;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--ring); }
+        textarea { height: 180px; resize: vertical; }
+
+        .btn { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 0.875rem 1.5rem; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            font-size: 1rem;
+            cursor: pointer; 
+            width: 100%; 
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .btn:hover { background: var(--primary-hover); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        #resultArea { display: none; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .report-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
+        
+        .badge-group { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.025em; }
+        
+        /* Dynamic Badge Classes */
+        .intent-refund { background: var(--refund); color: var(--refund-text); }
+        .intent-tech { background: var(--tech); color: var(--tech-text); }
+        .intent-sales { background: var(--sales); color: var(--sales-text); }
+        .intent-other { background: var(--other); color: var(--other-text); }
+        
+        .urgency-critical { background: var(--critical); color: var(--critical-text); }
+        .urgency-high { background: var(--high); color: var(--high-text); }
+        .urgency-medium { background: var(--medium); color: var(--medium-text); }
+        .urgency-low { background: var(--low); color: var(--low-text); }
+
+        .section { margin-bottom: 1.5rem; }
+        .section-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: block; }
+        .summary-text { font-size: 1.125rem; line-height: 1.6; color: var(--text-main); font-weight: 500; }
+        
+        .entity-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+        .entity-tag { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.875rem; color: #475569; }
+
+        .action-box { background: #f8fafc; border-left: 4px solid var(--primary); padding: 1rem; border-radius: 4px; margin-top: 1rem; }
+        .action-text { color: var(--primary); font-weight: 600; font-size: 1rem; }
+
+        .raw-data { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+        .raw-data summary { cursor: pointer; color: var(--text-muted); font-size: 0.875rem; font-weight: 500; outline: none; display: flex; align-items: center; gap: 0.4rem; }
+        .raw-data pre { background: #1e293b; color: #f8fafc; padding: 1rem; border-radius: 8px; font-size: 0.875rem; overflow-x: auto; margin-top: 1rem; }
+        
+        .copy-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; }
+        .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        .loader { display: none; text-align: center; margin: 2rem 0; }
+        .spinner { width: 32px; height: 32px; border: 3px solid var(--ring); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { font-weight: 600; color: var(--text-muted); font-size: 0.875rem; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📧 Automated Email Router - AI Test Lab</h1>
-        <div class="form-group">
-            <label for="subject">Email Subject</label>
-            <input type="text" id="subject" placeholder="e.g., Refund request for order #12345">
-        </div>
-        <div class="form-group">
-            <label for="body">Email Body</label>
-            <textarea id="body" placeholder="Paste the raw email content here..."></textarea>
-        </div>
-        <button id="processBtn" onclick="processEmail()">Process Email with Gemini</button>
-        
-        <div id="loading" class="loading">Gemini is analyzing the email...</div>
+    <div class="app-container">
+        <header>
+            <h1>Email Intelligence</h1>
+            <p>Automated Classification & Entity Extraction</p>
+        </header>
 
-        <div id="result">
-            <div id="tags"></div>
-            <h3 style="margin-top:0">Analysis Summary</h3>
-            <p id="summaryText"></p>
-            <strong>Entities Extracted:</strong>
-            <p id="entitiesList"></p>
-            <strong>Suggested Action:</strong>
-            <p id="actionText" style="color: var(--primary); font-weight: bold;"></p>
-            <details>
-                <summary style="cursor:pointer; color: #6b7280; font-size: 0.75rem;">View Raw JSON</summary>
-                <pre id="rawJson"></pre>
-            </details>
-        </div>
+        <main>
+            <section class="card">
+                <div class="form-group">
+                    <label for="subject">Email Subject</label>
+                    <input type="text" id="subject" placeholder="Enter email subject line...">
+                </div>
+                <div class="form-group">
+                    <label for="body">Email Content</label>
+                    <textarea id="body" placeholder="Paste the full email body here for analysis..."></textarea>
+                </div>
+                <button id="processBtn" class="btn" onclick="processEmail()">
+                    <span>Analyze with Gemini</span>
+                </button>
+            </section>
+
+            <div id="loader" class="loader">
+                <div class="spinner"></div>
+                <p class="loading-text">Gemini is analyzing the context...</p>
+            </div>
+
+            <article id="resultArea" class="card">
+                <div class="report-header">
+                    <div>
+                        <div class="report-title">Analysis Report</div>
+                        <div id="badgeGroup" class="badge-group">
+                            <!-- Badges injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <span class="section-label">Executive Summary</span>
+                    <p id="summaryText" class="summary-text"></p>
+                </div>
+
+                <div class="section">
+                    <span class="section-label">Extracted Entities</span>
+                    <div id="entityList" class="entity-list">
+                        <!-- Entities injected here -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <span class="section-label">Recommended Action</span>
+                    <div class="action-box">
+                        <p id="actionText" class="action-text"></p>
+                    </div>
+                </div>
+
+                <div class="raw-data">
+                    <details>
+                        <summary>Technical Details (JSON)</summary>
+                        <pre id="rawJson"></pre>
+                        <button class="copy-btn" onclick="copyJson()">Copy JSON to Clipboard</button>
+                    </details>
+                </div>
+            </article>
+        </main>
     </div>
 
     <script>
         async function processEmail() {
-            const subject = document.getElementById('subject').value;
-            const body = document.getElementById('body').value;
+            const subject = document.getElementById('subject').value.trim();
+            const body = document.getElementById('body').value.trim();
             const btn = document.getElementById('processBtn');
-            const loader = document.getElementById('loading');
-            const resultDiv = document.getElementById('result');
+            const loader = document.getElementById('loader');
+            const resultArea = document.getElementById('resultArea');
 
             if (!subject || !body) {
-                alert("Please provide both a subject and a body.");
+                alert("Please provide both a subject and email body.");
                 return;
             }
 
-            // UI State: Loading
+            // State: Loading
             btn.disabled = true;
             loader.style.display = 'block';
-            resultDiv.style.display = 'none';
+            resultArea.style.display = 'none';
 
             try {
                 const response = await fetch('/process-email', {
@@ -83,27 +228,57 @@
                     body: JSON.stringify({ subject, body })
                 });
 
-                if (!response.ok) throw new Error('Failed to process email');
+                if (!response.ok) throw new Error('Analysis failed');
 
                 const data = await response.json();
 
-                // UI State: Success
-                document.getElementById('tags').innerHTML = `
-                    <span class="tag intent-tag">Intent: ${data.intent}</span>
-                    <span class="tag urgency-tag">Urgency: ${data.urgency}</span>
+                // Render Badges
+                const intentClass = `intent-${data.intent.toLowerCase().replace('_', '')}`;
+                const urgencyClass = `urgency-${data.urgency.toLowerCase()}`;
+                
+                document.getElementById('badgeGroup').innerHTML = `
+                    <span class="badge ${intentClass}">Intent: ${data.intent}</span>
+                    <span class="badge ${urgencyClass}">Urgency: ${data.urgency}</span>
                 `;
+
+                // Render Content
                 document.getElementById('summaryText').innerText = data.summary;
-                document.getElementById('entitiesList').innerText = data.entities.join(', ') || 'None';
+                
+                // Render Entities
+                const entityContainer = document.getElementById('entityList');
+                entityContainer.innerHTML = '';
+                if (data.entities.length > 0) {
+                    data.entities.forEach(entity => {
+                        const span = document.createElement('span');
+                        span.className = 'entity-tag';
+                        span.innerText = entity;
+                        entityContainer.appendChild(span);
+                    });
+                } else {
+                    entityContainer.innerHTML = '<span class="entity-tag">No entities detected</span>';
+                }
+
                 document.getElementById('actionText').innerText = data.suggested_action;
                 document.getElementById('rawJson').innerText = JSON.stringify(data, null, 2);
                 
-                resultDiv.style.display = 'block';
+                // Show Results
+                resultArea.style.display = 'block';
             } catch (error) {
                 alert("Error: " + error.message);
             } finally {
                 btn.disabled = false;
                 loader.style.display = 'none';
             }
+        }
+
+        function copyJson() {
+            const jsonText = document.getElementById('rawJson').innerText;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                const copyBtn = document.querySelector('.copy-btn');
+                const originalText = copyBtn.innerText;
+                copyBtn.innerText = 'Copied!';
+                setTimeout(() => copyBtn.innerText = originalText, 2000);
+            });
         }
     </script>
 </body>
