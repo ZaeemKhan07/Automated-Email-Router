@@ -18,12 +18,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 @app.get("/")
 async def root():
     """
     Serve the index.html file as the root interface.
     """
-    return FileResponse("index.html")
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
 @app.post("/process-email", response_model=EmailAnalysis)
 async def process_email(payload: EmailPayload):
