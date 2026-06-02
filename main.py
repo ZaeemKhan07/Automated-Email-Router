@@ -70,8 +70,6 @@ def route_to_department(analysis: EmailAnalysis):
         print("ACTION: Created Ticket in ZenDesk (Technical Support Queue)")
     elif intent == Intent.SALES:
         print("ACTION: Forwarded to Salesforce (Sales Team notified)")
-    elif intent == Intent.FEEDBACK:
-        print("ACTION: Saved to Feedback Dashboard (Product Team notified)")
     else:
         print("ACTION: Routed to General Customer Service Inbox")
     

@@ -6,7 +6,6 @@ class Intent(str, Enum):
     REFUND = "REFUND"
     TECH_SUPPORT = "TECH_SUPPORT"
     SALES = "SALES"
-    FEEDBACK = "FEEDBACK"
     OTHER = "OTHER"
 
 class EmailPayload(BaseModel):
